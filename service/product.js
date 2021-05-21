@@ -1,13 +1,34 @@
 const productDAO = require("../dao/product");
+const shortid = require("short-id");
 // do validation
 class ProductService {
   async allProducts() {
     return await productDAO.all();
   }
   async createProduct(productData, images) {
-    const {   category, sub_id, brand_id, branded, best, arrival, featured, description } = productData;
-    return productDAO.createProduct(name, category, sub_id, brand_id, images, branded, best, arrival, featured, description);
-     
+    const {
+      category,
+      sub_id,
+      brand_id,
+      branded,
+      best,
+      arrival,
+      featured,
+      description,
+    } = productData;
+    const product_name = await shortid.generate();
+    return productDAO.createProduct(
+      product_name,
+      category,
+      sub_id,
+      brand_id,
+      images,
+      branded,
+      best,
+      arrival,
+      featured,
+      description
+    );
   }
   async updateProduct(productData) {
     const { name, description, id } = productData;

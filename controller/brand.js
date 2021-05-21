@@ -10,6 +10,15 @@ class BrandController {
       res.status(500).json("something went wrong");
     }
   }
+  async exist(req, res) { 
+    try {
+      const result = await brandService.exist(req.body.name);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   async createBrand(req, res) { 
     try {
       const result = await brandService.createBrand(req.body);

@@ -8,14 +8,31 @@ class ProductDAO {
   all() {
     return db("products").select();
   }
-  async createProduct(name, description) {
+  async createProduct(
+    product_name,
+    category,
+    sub_id,
+    brand_id,
+    images,
+    branded,
+    best,
+    arrival,
+    featured,
+    description
+  ) {
     const [id] = await db("products")
       .insert({
-        name,
+        product_name,
+        category,
+        sub_id,
+        brand_id,
+        images,
+        branded,
+        best,
+        arrival,
+        featured,
         description,
       })
-      .onConflict('name')
-      .ignore()
       .returning("id");
     if (id > 0) {
       return { status: 200, message: "Product created successfully", id };
@@ -23,23 +40,44 @@ class ProductDAO {
       return { status: 404, message: "Product was not created" };
     }
   }
-  async updateProduct(bid, name, description) {
+  async updateProduct(
+    bid,
+    product_name,
+    category,
+    sub_id,
+    brand_id,
+    branded,
+    best,
+    arrival,
+    featured,
+    description
+  ) {
     const [id] = await db("products")
       .where("id", bid)
       .update({
-        name,
+        product_name,
+        category,
+        sub_id,
+        brand_id,
+        branded,
+        best,
+        arrival,
+        featured,
         description,
-      }).onConflict('name')
-      .merge(['description', 'name', 'updated_at'])
+      })
       .returning("id");
     if (id > 0) {
-      return { status: 200, message: "Product record updated successfully", id };
+      return {
+        status: 200,
+        message: "Product record updated successfully",
+        id,
+      };
     } else {
       return { status: 404, message: "Product record not updated" };
     }
   }
   async delProduct(id) {
-    const result = await db("products").where("id", id).del()
+    const result = await db("products").where("id", id).del();
     if (result.length > 0) return true;
     return false;
   }

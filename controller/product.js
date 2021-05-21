@@ -11,11 +11,11 @@ class ProductController {
       res.status(500).json("something went wrong");
     }
   }
-  async createProduct(req, res) { 
-    upload(req, res, (err) => {
+  createProduct(req, res) { 
+    upload(req, res, async (err) => {
       if(err){
         res.json({
-          msg: "error uploading product",
+          message: "error uploading product",
           err
         })
       } else {
@@ -28,7 +28,7 @@ class ProductController {
       console.log({element})
       count +=1;
     }
-    if(count + 1 === files.length) {
+    if(count === files.length) {
       try {
         const result = await productService.createProduct(req.body, images);
         res.status(201).json(result);
