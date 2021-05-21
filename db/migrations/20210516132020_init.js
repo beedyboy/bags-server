@@ -46,6 +46,7 @@ exports.up = function (knex) {
         .defaultTo("Active");
       subTable.timestamps(true, true);
     })
+    
 
     .createTable("products", function (productTable) {
       productTable.increments();
@@ -61,7 +62,7 @@ exports.up = function (knex) {
       productTable.boolean("has_name").nullable().defaultTo(false);
       productTable.boolean("branded").nullable().defaultTo(false);
       productTable.boolean("best").nullable().defaultTo(false);
-      productTable.boolean("new").nullable().defaultTo(false);
+      productTable.boolean("arrival").nullable().defaultTo(false);
       productTable.boolean("featured").nullable().defaultTo(false);
       productTable.timestamps(true, true);
       productTable
