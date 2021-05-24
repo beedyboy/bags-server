@@ -25,6 +25,9 @@ class AccountService {
       return { exist: false, message: "Account is available" };
     }
   }
+  async auth(data) {
+   return await accountDAO.auth(data); 
+  }
   async delAccount(id) {
     const result = accountDAO.delAccount(id);
     if (result) {

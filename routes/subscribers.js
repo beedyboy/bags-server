@@ -6,5 +6,5 @@ router.post("/", Controller.subscribe);
 router.put("/", Controller.update);
 
 router.get("/", Controller.getAllSubscribers);
-router.delete("/", Controller.unsubscribe);
+router.delete("/:id", Controller.unsubscribe);
 module.exports = router;

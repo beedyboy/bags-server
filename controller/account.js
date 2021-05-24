@@ -1,8 +1,8 @@
-const { multerUploads } = require('../middleware/multer');
+const { multerUploads } = require("../middleware/multer");
 const accountService = require("../service/account");
-var upload = multerUploads.array('file');
+var upload = multerUploads.array("file");
 class AccountController {
-  async getAllAccounts(req, res) { 
+  async getAllAccounts(req, res) {
     try {
       const result = await accountService.allAccounts();
       res.status(200).json(result);
@@ -11,7 +11,7 @@ class AccountController {
       res.status(500).json("something went wrong");
     }
   }
-  async createAccount(req, res) { 
+  async createAccount(req, res) {
     try {
       const result = await accountService.createAccount(req.body);
       res.status(result.status).json(result);
@@ -20,7 +20,7 @@ class AccountController {
       res.status(500).json("something went wrong");
     }
   }
-  async updateAccount(req, res) { 
+  async updateAccount(req, res) {
     try {
       const result = await accountService.updateAccount(req.body);
       res.status(201).json(result);
@@ -29,10 +29,19 @@ class AccountController {
       res.status(500).json("something went wrong");
     }
   }
-  async deleteAccount(req, res) { 
+  async deleteAccount(req, res) {
     try {
-      const result = await accountService.delAccount(req.query.id);
+      const result = await accountService.delAccount(req.params.id);
       res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async auth(req, res) {
+    try {
+      const result = await accountService.auth(req.body);
+      res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
