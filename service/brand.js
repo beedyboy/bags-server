@@ -18,8 +18,7 @@ class BrandService {
     return brandDAO.updateBrand(id, name, description);
   }
   async exist(name) {
-    const result = await brandDAO.exist(name);
-    console.log({ result });
+    const result = await brandDAO.exist(name); 
     if (result) {
       return { exist: true, message: "Brand already exist" };
     } else {

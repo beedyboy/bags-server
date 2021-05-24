@@ -16,7 +16,6 @@ exports.up = function (knex) {
         .defaultTo("Active");
       table.timestamps(true, true);
     })
-
     .createTable("subscribers", function (subscribeTable) {
       subscribeTable.increments();
       subscribeTable.string("email", 50).notNullable().unique();

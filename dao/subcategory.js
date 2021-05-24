@@ -3,8 +3,11 @@ class SubCategoryDAO {
     
     async exist(name, category) {
         const result = await db("subcategories").where({name, category});
-        if (result.length > 0) return true;
-        return false;
+        if (result.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
       }
       all() {
         return db("subcategories").select();

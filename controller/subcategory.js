@@ -4,7 +4,7 @@ class SubCategoryController {
   async getAllData(req, res) { 
     try {
       const result = await Service.allCategories();
-      res.status(result.status).json(result);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
