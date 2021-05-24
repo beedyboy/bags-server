@@ -22,7 +22,7 @@ class BrandController {
   async createBrand(req, res) { 
     try {
       const result = await brandService.createBrand(req.body);
-      res.status(201).json(result);
+      res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
@@ -31,15 +31,15 @@ class BrandController {
   async updateBrand(req, res) { 
     try {
       const result = await brandService.updateBrand(req.body);
-      res.status(201).json(result);
+      res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
     }
   }
   async deleteBrand(req, res) { 
-    try {
-      const result = await brandService.delBrand(req.query.id);
+    try { 
+      const result = await brandService.delBrand(req.params.id);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);

@@ -7,5 +7,5 @@ router.post("/confirm", brandController.exist);
 router.put("/", brandController.updateBrand);
 
 router.get("/", brandController.getAllBrands);
-router.delete("/", brandController.deleteBrand);
+router.delete("/:id", brandController.deleteBrand);
 module.exports = router;

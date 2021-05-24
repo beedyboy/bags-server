@@ -2,8 +2,11 @@ const db = require("../db/db");
 class BrandDAO {
   async exist(name) {
     const result = await db("brands").where("name", name);
-    if (result.length > 0) return true;
-    return false;
+    if (result.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
   all() {
     return db("brands").select();
@@ -14,11 +17,11 @@ class BrandDAO {
         name,
         description,
       })
-      .onConflict('name')
+      .onConflict("name")
       .ignore()
       .returning("id");
     if (id > 0) {
-      return { status: 200, message: "Brand created successfully", id };
+      return { status: 201, message: "Brand created successfully", id };
     } else {
       return { status: 404, message: "Brand was not created" };
     }
@@ -29,8 +32,9 @@ class BrandDAO {
       .update({
         name,
         description,
-      }).onConflict('name')
-      .merge(['description', 'name', 'updated_at'])
+      })
+      .onConflict("name")
+      .merge(["description", "name", "updated_at"])
       .returning("id");
     if (id > 0) {
       return { status: 200, message: "Brand record updated successfully", id };
@@ -39,7 +43,7 @@ class BrandDAO {
     }
   }
   async delBrand(id) {
-    const result = await db("brands").where("id", id).del()
+    const result = await db("brands").where("id", id).del();
     if (result.length > 0) return true;
     return false;
   }

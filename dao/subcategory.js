@@ -16,7 +16,7 @@ class SubCategoryDAO {
           }) 
           .returning("id");
         if (id > 0) {
-          return { status: 200, message: "Sub Category created successfully", id };
+          return { status: 201, message: "Sub Category created successfully", id };
         } else {
           return { status: 404, message: "Sub Category was not created" };
         }

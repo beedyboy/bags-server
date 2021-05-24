@@ -17,15 +17,16 @@ class BrandService {
     const { name, description, id } = brandData;
     return brandDAO.updateBrand(id, name, description);
   }
-  exist(name) {
-    const result = brandDAO.exist(name);
+  async exist(name) {
+    const result = await brandDAO.exist(name);
+    console.log({ result });
     if (result) {
       return { exist: true, message: "Brand already exist" };
     } else {
       return { exist: false, message: "Brand is available" };
     }
   }
-  async delBrand(id) {
+  async delBrand(id) { 
     const result = brandDAO.delBrand(id);
     if (result) {
       return { message: "Brand deleted successfully" };

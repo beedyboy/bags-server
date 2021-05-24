@@ -9,6 +9,7 @@ exports.up = function (knex) {
       table.string("email", 50).notNullable().unique();
       table.text("password").notNullable();
       table.string("phone", 50).nullable();
+      table.specificType("roles", "text ARRAY");
       table.text("token").nullable();
       table
         .enu("status", ["Active", "Pending", "Deleted", "Banned"])
@@ -17,17 +18,17 @@ exports.up = function (knex) {
     })
 
     .createTable("subscribers", function (subscribeTable) {
-        subscribeTable.increments();
-        subscribeTable.string("email", 50).notNullable().unique(); 
-        subscribeTable
-          .enu("status", ["Active", "Pending", "Deleted"])
-          .defaultTo("Active");
-        subscribeTable.timestamps(true, true);
-      })
+      subscribeTable.increments();
+      subscribeTable.string("email", 50).notNullable().unique();
+      subscribeTable
+        .enu("status", ["Active", "Pending", "Deleted"])
+        .defaultTo("Active");
+      subscribeTable.timestamps(true, true);
+    })
 
     .createTable("brands", function (brandTable) {
       brandTable.increments();
-      brandTable.string("name", 50).nullable();
+      brandTable.string("name", 50).nullable().unique();
       brandTable.text("description").nullable();
       brandTable
         .enu("status", ["Active", "Pending", "Deleted"])
@@ -39,22 +40,21 @@ exports.up = function (knex) {
       subTable.increments();
       subTable.string("name", 50).nullable();
       subTable.string("slug", 50).nullable();
-      subTable.string("category", 100).nullable(); 
+      subTable.string("category", 100).nullable();
       subTable.text("description").nullable();
       subTable
         .enu("status", ["Active", "Pending", "Deleted"])
         .defaultTo("Active");
       subTable.timestamps(true, true);
     })
-    
 
     .createTable("products", function (productTable) {
       productTable.increments();
-      productTable.string("category", 100).nullable(); 
+      productTable.string("category", 100).nullable();
       productTable.integer("sub_id").unsigned().nullable();
       productTable.integer("brand_id").unsigned().nullable();
       productTable.string("product_name", 50).nullable();
-      productTable.text("description").nullable(); 
+      productTable.text("description").nullable();
       productTable
         .enu("status", ["Active", "Pending", "Deleted"])
         .defaultTo("Active");
@@ -78,6 +78,33 @@ exports.up = function (knex) {
         .onDelete("CASCADE")
         .onUpdate("CASCADE");
     })
+    .createTable("reconcillations", (recTable) => {
+      recTable.increments("id");
+      recTable.string("value_date", 30).notNullable();
+      recTable.text("remarks").nullable();
+      recTable.float("credit_amount").notNullable();
+      recTable.float("amount_used").nullable();
+      recTable.float("balance").nullable();
+      recTable.string("customer", 50).nullable();
+      recTable.boolean("approved_one").nullable().defaultTo(false);
+      recTable.boolean("approved_two").nullable().defaultTo(false);
+      recTable.integer("approval_one").unsigned().nullable();
+      recTable.integer("approval_two").unsigned().nullable();
+      recTable.string("reference", 30).nullable();
+      recTable.timestamps(true, true);
+      recTable
+        .foreign("approval_one")
+        .references("id")
+        .inTable("accounts")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      recTable
+        .foreign("approval_two")
+        .references("id")
+        .inTable("accounts")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+    })
     .then(() => console.log("table created"))
     .catch((err) => {
       console.log(err);
@@ -86,6 +113,7 @@ exports.up = function (knex) {
     .finally(() => {
       knex.destroy();
     });
+  
 };
 
 exports.down = function (knex) {
