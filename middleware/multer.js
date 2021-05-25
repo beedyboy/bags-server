@@ -3,7 +3,7 @@ const multer = require('multer');
 const Datauri = require('datauri/parser');
 
 const storage = multer.diskStorage({
-    destination: './uploads/', 
+    destination: './uploads/products/', 
      filename: function (req, file, cb) { 
         cb(null , file.fieldname + '-' + Date.now() + path.extname(file.originalname));   
      }

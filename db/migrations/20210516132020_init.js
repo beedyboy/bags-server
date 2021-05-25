@@ -9,7 +9,7 @@ exports.up = function (knex) {
       table.string("email", 50).notNullable().unique();
       table.text("password").notNullable();
       table.string("phone", 50).nullable();
-      table.specificType("roles", "text ARRAY");
+      table.json("roles");
       table.boolean("hasRoles").nullable().defaultTo(false);
       table.text("token").nullable();
       table

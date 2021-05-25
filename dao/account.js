@@ -143,7 +143,8 @@ class AccountDAO {
     return false;
   }
   async setRoles(data) {
-    const { priviledges: roles, id: uid } = data;
+    const { priviledges,  id: uid } = data;
+    const roles =  JSON.stringify(priviledges); 
     const hasRoles = true;
     const [id] = await db("accounts")
       .where("id", uid)

@@ -23,9 +23,7 @@ class ProductController {
         let images = [];
         var count = 0;
     for (let index = 0; index < files.length; index++) {
-      const element = files[index].filename;
-      images.push(element);
-      console.log({element})
+      const element = files[index].filename; 
       count +=1;
     }
     if(count === files.length) {
