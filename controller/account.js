@@ -18,6 +18,15 @@ class AccountController {
       res.status(500).json("something went wrong");
     }
   }
+  async setRoles(req, res) {
+    try {
+      const result = await accountService.setRoles(req.body);
+      res.status(result.status).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   async exist(req, res) { 
     try {
       const result = await accountService.exist(req.body.email);

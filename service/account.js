@@ -16,6 +16,9 @@ class AccountService {
   async updateAccount(accountData) {
     return accountDAO.updateAccount(accountData);
   }
+  async setRoles(accountData) {
+    return accountDAO.setRoles(accountData);
+  }
   async exist(email) {
     const result = await accountDAO.exist(email);
     if (result) {

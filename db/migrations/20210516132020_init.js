@@ -10,6 +10,7 @@ exports.up = function (knex) {
       table.text("password").notNullable();
       table.string("phone", 50).nullable();
       table.specificType("roles", "text ARRAY");
+      table.boolean("hasRoles").nullable().defaultTo(false);
       table.text("token").nullable();
       table
         .enu("status", ["Active", "Pending", "Deleted", "Banned"])

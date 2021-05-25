@@ -19,7 +19,6 @@ class AccountDAO {
       address,
       phone,
       password,
-      roles,
     } = data;
     const newPwd = await hash(password, Number(process.env.SECRET));
     const [id] = await db("accounts")
@@ -31,7 +30,6 @@ class AccountDAO {
         address,
         phone,
         password: newPwd,
-        roles,
       })
       .returning("id");
     if (id > 0) {
@@ -50,15 +48,15 @@ class AccountDAO {
       username,
       address,
       phone,
-      roles,
     } = data;
 
     const check_record = await db("accounts").where({ email }).first();
-    const exist = check_record.length > 0
-      ? check_record && Number(check_record.id) === uid
-        ? false
-        : true
-      : false; 
+    const exist =
+      check_record.length > 0
+        ? check_record && Number(check_record.id) === uid
+          ? false
+          : true
+        : false;
     if (exist === false) {
       const [id] = await db("accounts")
         .where("id", uid)
@@ -69,7 +67,6 @@ class AccountDAO {
           username,
           address,
           phone,
-          roles,
         })
         .returning("id");
       if (id > 0) {
@@ -89,6 +86,26 @@ class AccountDAO {
     const result = await db("accounts").where("id", id).del();
     if (result.length > 0) return true;
     return false;
+  }
+  async setRoles(data) {
+    const { priviledges: roles, id: uid } = data;
+    const hasRoles = true;
+    const [id] = await db("accounts")
+      .where("id", uid)
+      .update({
+        roles,
+        hasRoles,
+      })
+      .returning("id");
+    if (id > 0) {
+      return {
+        status: 200,
+        message: "Role updated successfully",
+        id,
+      };
+    } else {
+      return { status: 422, error: "Error updating record" };
+    }
   }
   async auth(data) {
     try {
