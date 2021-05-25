@@ -11,6 +11,7 @@ class ReconcillationDAO {
   async saveUpload(data) {
     const [id] = await db("reconcillations").insert(data).returning("id");
     if (id > 0) {
+      console.log('id is', id)
       return {
         status: 200,
         message: "Account statement uploaded successfully",

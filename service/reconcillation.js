@@ -7,20 +7,20 @@ class ReconcillationService {
   async allSubscribers() {
     return await reconcillationDAO.all();
   }
-    upload(file) {
+    async  performUpload(file) {  
+          let lr;
     let path =  "./uploads/documents/" + file.filename;
-     readXlsxFile(path).then(async (rows) => {
+   await  readXlsxFile(path).then(async (rows) => {
       // skip headers
-      rows.shift();
       let existed = [];
       let datas = [];
+      rows.shift();
       for (const row of rows) { 
         let data = {
           value_date:moment(getJsDateFromExcel(row[2])).format('DD-MM-YYYY'),
           remarks: row[4],
           credit_amount: row[3],
         }
-        console.log({data})
         const check =   await reconcillationDAO.exist({
           value_date:moment(getJsDateFromExcel(row[2])).format('DD-MM-YYYY'),
           remarks: row[4],
@@ -31,10 +31,17 @@ class ReconcillationService {
           existed.push(data);
         }
       }
-      
-      
+      // console.log({datas})
+      if(datas.length > 0) { 
+        console.log('length', datas.length)
+        // lr = { status: 200, message: "Upload was successful"}
+       lr =  await reconcillationDAO.saveUpload(datas); 
+  
+      } else {
+       lr = { status: 404, message: "Upload was unsuccessful"}
+      }
     });
-
+    return lr;
   }
   async updateSubscription(subscriptionData) {
     const {
