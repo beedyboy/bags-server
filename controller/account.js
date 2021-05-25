@@ -9,6 +9,26 @@ class AccountController {
       res.status(500).json("something went wrong");
     }
   }
+  async myProfile(req, res) {
+    try {
+      const { userId } = req;
+      const result = await accountService.myProfile(userId);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async getProfileById(req, res) {
+    try {
+      const { id } = req.params;
+      const result = await accountService.myProfile(id);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   async createAccount(req, res) {
     try {
       const result = await accountService.createAccount(req.body);

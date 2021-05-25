@@ -19,6 +19,11 @@ class AccountService {
   async updateProfile(accountData, id) {
     return accountDAO.updateProfile(accountData, id);
   }
+
+  async myProfile(id) {
+    return await accountDAO.myProfile(id);
+    
+  }
   async setRoles(accountData) {
     return accountDAO.setRoles(accountData);
   }

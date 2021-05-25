@@ -10,7 +10,19 @@ class AccountDAO {
     return false;
   }
   all() {
-    return db("accounts").select();
+    return db("accounts").select(
+      "id",
+      "firstname",
+      "lastname",
+      "username",
+      "phone",
+      "roles",
+      "address",
+      "email",
+      "status",
+      "created_at",
+      "updated_at"
+    );
   }
   async createAccount(data) {
     const {
@@ -107,6 +119,23 @@ class AccountDAO {
     } else {
       return { status: 404, message: "Profile not updated" };
     }
+  }
+  myProfile(id) {
+    return db("accounts")
+      .where({ id })
+      .first(
+        "id",
+        "firstname",
+        "lastname",
+        "username",
+        "phone",
+        "roles",
+        "address",
+        "email",
+        "status",
+        "created_at",
+        "updated_at"
+      );
   }
   async delAccount(id) {
     const result = await db("accounts").where("id", id).del();

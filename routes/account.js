@@ -13,6 +13,8 @@ router.delete("/:id", accountController.deleteAccount);
 router.post("/auth", accountController.auth);
 router.put("/auth", accountController.setRoles);
 
-router.put("/profile", Authenticated, accountController.updateProfile);
+router.get("/profile/:id", Authenticated(accountController.getProfileById));
+router.get("/profile", Authenticated(accountController.myProfile));
+router.put("/profile", Authenticated(accountController.updateProfile));
 
 module.exports = router;

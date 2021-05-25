@@ -12,7 +12,7 @@ const Authenticated = (icomponent) => {
     }
     try {
       const { id } = jwt.verify(bearer, process.env.SECRET_KEY);
-      //   console.log({_id})
+        // console.log({id})
       req.userId = id;
       return icomponent(req, res);
     } catch (err) {
