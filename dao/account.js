@@ -19,6 +19,7 @@ class AccountDAO {
       address,
       phone,
       password,
+      roles,
     } = data;
     const newPwd = await hash(password, Number(process.env.SECRET));
     const [id] = await db("accounts")
@@ -30,6 +31,7 @@ class AccountDAO {
         address,
         phone,
         password: newPwd,
+        roles,
       })
       .returning("id");
     if (id > 0) {
@@ -39,34 +41,48 @@ class AccountDAO {
     }
   }
 
-  async updateAccount(
-    uid,
-    email,
-    firstname,
-    lastname,
-    username,
-    address,
-    phone
-  ) {
-    const [id] = await db("accounts")
-      .where("id", uid)
-      .update({
-        email,
-        firstname,
-        lastname,
-        username,
-        address,
-        phone,
-      })
-      .returning("id");
-    if (id > 0) {
-      return {
-        status: 200,
-        message: "Account record updated successfully",
-        id,
-      };
+  async updateAccount(data) {
+    const {
+      id: uid,
+      email,
+      firstname,
+      lastname,
+      username,
+      address,
+      phone,
+      roles,
+    } = data;
+
+    const check_record = await db("accounts").where({ email });
+    const exist = check_record
+      ? check_record && check_record.id === uid
+        ? false
+        : true
+      : false;
+    if (exist === false) {
+      const [id] = await db("accounts")
+        .where("id", uid)
+        .update({
+          email,
+          firstname,
+          lastname,
+          username,
+          address,
+          phone,
+          roles,
+        })
+        .returning("id");
+      if (id > 0) {
+        return {
+          status: 200,
+          message: "Account record updated successfully",
+          id,
+        };
+      } else {
+        return { status: 404, message: "Account record not updated" };
+      }
     } else {
-      return { status: 404, message: "Account record not updated" };
+      return { status: 422, error: "Duplicate record is not allowed" };
     }
   }
   async delAccount(id) {

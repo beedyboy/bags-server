@@ -1,6 +1,4 @@
-const { multerUploads } = require("../middleware/multer");
 const accountService = require("../service/account");
-var upload = multerUploads.array("file");
 class AccountController {
   async getAllAccounts(req, res) {
     try {
@@ -15,6 +13,15 @@ class AccountController {
     try {
       const result = await accountService.createAccount(req.body);
       res.status(result.status).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async exist(req, res) { 
+    try {
+      const result = await accountService.exist(req.body.email);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");

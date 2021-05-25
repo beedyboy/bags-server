@@ -14,11 +14,10 @@ class AccountService {
     }
   }
   async updateAccount(accountData) {
-    const { name, description, id } = accountData;
-    return accountDAO.updateAccount(id, name, description);
+    return accountDAO.updateAccount(accountData);
   }
-  exist(email) {
-    const result = accountDAO.exist(email);
+  async exist(email) {
+    const result = await accountDAO.exist(email);
     if (result) {
       return { exist: true, message: "Account already exist" };
     } else {
