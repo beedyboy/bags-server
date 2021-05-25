@@ -53,12 +53,12 @@ class AccountDAO {
       roles,
     } = data;
 
-    const check_record = await db("accounts").where({ email });
-    const exist = check_record
-      ? check_record && check_record.id === uid
+    const check_record = await db("accounts").where({ email }).first();
+    const exist = check_record.length > 0
+      ? check_record && Number(check_record.id) === uid
         ? false
         : true
-      : false;
+      : false; 
     if (exist === false) {
       const [id] = await db("accounts")
         .where("id", uid)

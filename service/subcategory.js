@@ -6,8 +6,7 @@ class SubCategoryService {
     return await DAO.all();
   }
   async exist(name, category) {
-    const result = await DAO.exist(name, category); 
-    console.log({result})
+    const result = await DAO.exist(name, category);  
     if (result) {
       return { exist: true, message: "Sub Category already exist", result };
     } else {

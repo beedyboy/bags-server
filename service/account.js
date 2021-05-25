@@ -10,7 +10,7 @@ class AccountService {
     if (!check) {
       return accountDAO.createAccount(accountData);
     } else {
-      return { exist: true, message: "Email already exist" };
+      return { status: 200, exist: true, message: "Email already exist" };
     }
   }
   async updateAccount(accountData) {
