@@ -1,6 +1,8 @@
 const db = require("../db/db");
 const { hash, compare } = require("bcryptjs");
 const { sign } = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
 class AccountDAO {
   async exist(email) {
     const result = await db("accounts").where({ email });
@@ -82,6 +84,30 @@ class AccountDAO {
       return { status: 422, error: "Duplicate record is not allowed" };
     }
   }
+
+  async updateProfile(data, uid) {
+    const { firstname, lastname, username, address, phone } = data;
+
+    const [id] = await db("accounts")
+      .where("id", uid)
+      .update({
+        firstname,
+        lastname,
+        username,
+        address,
+        phone,
+      })
+      .returning("id");
+    if (id > 0) {
+      return {
+        status: 200,
+        message: "Profile updated successfully",
+        id,
+      };
+    } else {
+      return { status: 404, message: "Profile not updated" };
+    }
+  }
   async delAccount(id) {
     const result = await db("accounts").where("id", id).del();
     if (result.length > 0) return true;
@@ -110,18 +136,17 @@ class AccountDAO {
   async auth(data) {
     try {
       const { email, password } = data;
-      const user = await db("accounts").where({ email });
+      const user = await db("accounts").where({ email }).first();
       if (!user) {
         return { status: 404, error: "user doesn't exist" };
       }
-      console.log({ user });
       const check_password = await compare(password, user.password);
       if (!check_password) {
         return { status: 401, error: "email or password dont match" };
       }
       const token = await sign({ id: user.id }, `${process.env.SECRET_KEY}`);
       const [id] = await db("accounts")
-        .where("id", uid)
+        .where("id", user.id)
         .update({
           token,
         })

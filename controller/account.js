@@ -45,6 +45,16 @@ class AccountController {
       res.status(500).json("something went wrong");
     }
   }
+  async updateProfile(req, res) {
+    try {
+      const { userId } = req;
+      const result = await accountService.updateProfile(req.body, userId);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   async deleteAccount(req, res) {
     try {
       const result = await accountService.delAccount(req.params.id);
