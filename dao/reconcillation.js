@@ -1,21 +1,35 @@
 const db = require("../db/db");
 class ReconcillationDAO {
+   
+  all() {
+ return db
+      .from("reconcillations as r")
+     .leftOuterJoin("accounts as a1", function () {
+        this.on("r.approval_one", "=", "a1.id") 
+      })
+     .leftOuterJoin("accounts as a2", function () {
+        this.on("r.approval_two", "=", "a2.id") 
+      })
+      .select("r.*", "a1.firstname as ap1first", "a1.lastname as ap1last", "a2.firstname as ap2first", "a2.lastname as ap2last")
+  
+  } 
+  filterRecord(data) {
+    // console.log({data})
+    return  db.from("reconcillations as r")
+    .where(data)
+    .leftOuterJoin("accounts as a1", function () {
+       this.on("r.approval_one", "=", "a1.id") 
+     })
+    .leftOuterJoin("accounts as a2", function () {
+       this.on("r.approval_two", "=", "a2.id") 
+     })
+     .select("r.*", "a1.firstname as ap1first", "a1.lastname as ap1last", "a2.firstname as ap2first", "a2.lastname as ap2last")
+ 
+  }
   async exist(data) {
     const result = await db("reconcillations").where(data);
     if (result.length > 0) return true;
     return false;
-  }
-  all() {
-    return db("reconcillations as r")
-      .join("accounts as a", "r.approval_one", "=", "a.id")
-      .join("accounts as a2", "r.approval_two", "=", "a2.id")
-      .select(
-        "r.*",
-        "a.firstname",
-        "a.lastname",
-        "a2.firstname",
-        "a2.lastname"
-      );
   }
   async saveUpload(data) {
     const [id] = await db("reconcillations").insert(data).returning("id");
@@ -31,7 +45,7 @@ class ReconcillationDAO {
     }
   }
   async firstApproval(data, uid) {
-    const { rid, approved_one, amount_used, balance } = data;
+    const { id:rid, approved_one, amount_used, balance } = data;
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({
@@ -52,7 +66,7 @@ class ReconcillationDAO {
     }
   }
   async secondApproval(data, uid) {
-    const { rid, approved_two } = data;
+    const { id:rid, approved_two } = data;
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({
@@ -71,7 +85,7 @@ class ReconcillationDAO {
     }
   }
   async overturn(data) {
-    const { rid, approved_one, approved_two, amount_used, balance } = data;
+    const { id:rid, approved_one, approved_two, amount_used, balance } = data;
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({

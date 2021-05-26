@@ -7,6 +7,16 @@ class ReconcillationService {
   async allData() {
     return await reconcillationDAO.all();
   }
+  async filterRecord(key, value) {
+    let data= {};
+    if(key === "approved_one") {
+      data = { approved_one: value}
+    }
+    if(key === "approved_two") {
+      data = { approved_two: value}
+    }
+    return await reconcillationDAO.filterRecord(data);
+  }
   async performUpload(file) {
     let lr;
     let path = "./uploads/documents/" + file.filename;

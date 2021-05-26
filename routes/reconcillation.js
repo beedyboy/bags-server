@@ -20,6 +20,7 @@ router.post(
 router.post("/overturn", reconcillationController.overturn);
 
 router.get("/", reconcillationController.getAllRecord);
+router.get("/:key/:value", reconcillationController.filterRecord);
 router.delete("/:id", reconcillationController.delRecord);
 
 module.exports = router;

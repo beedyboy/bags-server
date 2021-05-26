@@ -10,6 +10,16 @@ class ReconcillationController {
       res.status(500).json("something went wrong");
     }
   }
+  async filterRecord(req, res) {
+    try {
+      const { key, value }  = req.params; 
+      const result = await Service.filterRecord(key, value);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   async uploadStatement(req, res) {
     try {
       if (req.file == undefined) {
