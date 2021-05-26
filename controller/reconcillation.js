@@ -1,16 +1,25 @@
 const Service = require("../service/reconcillation");
 
 class ReconcillationController {
+  async getAllRecord(req, res) {
+    try {
+      const result = await Service.allData();
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   async uploadStatement(req, res) {
     try {
       if (req.file == undefined) {
         return res.status(400).send("Please upload an excel file!");
-      }  
+      }
       const result = await Service.performUpload(req.file);
-      console.log({result})
+      console.log({ result });
       res.status(result.status).json(result);
     } catch (error) {
-      console.error({error});
+      console.error({ error });
       res.status(500).send({
         message: "Could not upload the file: " + req.file.originalname,
       });
@@ -18,18 +27,38 @@ class ReconcillationController {
       // error: error.message,});
     }
   }
-  async update(req, res) {
+  async firstApproval(req, res) {
     try {
-      const result = await Service.updateSubscription(req.body);
+      const { userId } = req;
+      const result = await Service.firstApproval(req.body, userId);
       res.status(201).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
     }
   }
-  async unsubscribe(req, res) {
+  async secondApproval(req, res) {
     try {
-      const result = await Service.unsubscribe(req.query.id);
+      const { userId } = req;
+      const result = await Service.secondApproval(req.body, userId);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async overturn(req, res) {
+    try {
+      const result = await Service.overturn(req.body);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async delRecord(req, res) {
+    try {
+      const result = await Service.delRecord(req.params.id);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);

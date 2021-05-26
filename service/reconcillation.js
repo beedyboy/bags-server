@@ -4,25 +4,25 @@ const moment = require("moment");
 const { getJsDateFromExcel } = require("excel-date-to-js");
 // do validation
 class ReconcillationService {
-  async allSubscribers() {
+  async allData() {
     return await reconcillationDAO.all();
   }
-    async  performUpload(file) {  
-          let lr;
-    let path =  "./uploads/documents/" + file.filename;
-   await  readXlsxFile(path).then(async (rows) => {
+  async performUpload(file) {
+    let lr;
+    let path = "./uploads/documents/" + file.filename;
+    await readXlsxFile(path).then(async (rows) => {
       // skip headers
       let existed = [];
       let datas = [];
       rows.shift();
-      for (const row of rows) { 
+      for (const row of rows) {
         let data = {
-          value_date:moment(getJsDateFromExcel(row[2])).format('DD-MM-YYYY'),
+          value_date: moment(getJsDateFromExcel(row[2])).format("DD-MM-YYYY"),
           remarks: row[4],
           credit_amount: row[3],
-        }
-        const check =   await reconcillationDAO.exist({
-          value_date:moment(getJsDateFromExcel(row[2])).format('DD-MM-YYYY'),
+        };
+        const check = await reconcillationDAO.exist({
+          value_date: moment(getJsDateFromExcel(row[2])).format("DD-MM-YYYY"),
           remarks: row[4],
         });
         if (!check) {
@@ -32,48 +32,34 @@ class ReconcillationService {
         }
       }
       // console.log({datas})
-      if(datas.length > 0) { 
-        console.log('length', datas.length)
+      if (datas.length > 0) {
+        console.log("length", datas.length);
         // lr = { status: 200, message: "Upload was successful"}
-       lr =  await reconcillationDAO.saveUpload(datas); 
-  
+        lr = await reconcillationDAO.saveUpload(datas);
       } else {
-       lr = { status: 404, message: "Upload was unsuccessful"}
+        lr = { status: 404, message: "Upload was unsuccessful" };
       }
     });
     return lr;
   }
-  async updateSubscription(subscriptionData) {
-    const {
-      email,
-      status,
-      id
-    } = subscriptionData;
-    return reconcillationDAO.update(id, email, status);
+  async firstApproval(data, id) {
+    return reconcillationDAO.firstApproval(data, id);
   }
-  exist(email) {
-    const result = reconcillationDAO.exist(email);
+  async secondApproval(data, id) {
+    return reconcillationDAO.secondApproval(data, id);
+  }
+  async overturn(data) {
+    return reconcillationDAO.overturn(data);
+  } 
+  async delRecord(id) {
+    const result = reconcillationDAO.delRecord(id);
     if (result) {
       return {
-        exist: true,
-        message: "You already subscribed"
+        message: "Record deleted successfully",
       };
     } else {
       return {
-        exist: false,
-        message: "Email is available"
-      };
-    }
-  }
-  async unsubscribe(id) {
-    const result = reconcillationDAO.delSubscription(id);
-    if (result) {
-      return {
-        message: "Subscription deleted successfully"
-      };
-    } else {
-      return {
-        message: "Subscription not deleted"
+        message: "Record not deleted",
       };
     }
   }
