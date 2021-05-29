@@ -187,7 +187,7 @@ class AccountDAO {
           message: "Login successful",
           firstname: user.firstname,
           lastname: user.lastname,
-          acl: user.roles[0],
+          acl: user.roles,
           token,
         };
       } else {
