@@ -41,7 +41,7 @@ class ReconcillationController {
     try {
       const { userId } = req;
       const result = await Service.firstApproval(req.body, userId);
-      res.status(201).json(result);
+      res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
@@ -51,7 +51,7 @@ class ReconcillationController {
     try {
       const { userId } = req;
       const result = await Service.secondApproval(req.body, userId);
-      res.status(201).json(result);
+      res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
@@ -60,7 +60,7 @@ class ReconcillationController {
   async overturn(req, res) {
     try {
       const result = await Service.overturn(req.body);
-      res.status(201).json(result);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");

@@ -77,6 +77,7 @@ class ReconcillationDAO {
   }
   async secondApproval(data, uid) {
     const { id: rid, approved_two } = data;
+    console.log({approved_two})
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({
