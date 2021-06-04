@@ -7,8 +7,8 @@ const app = express();
 global.__basedir = __dirname + "/..";
 // app.use(cors())
 
-const origin = '*';
-// const origin = "https://bags-admin.herokuapp.com";
+// const origin = '*';
+const origin = "https://bags-admin.herokuapp.com";
 app.use(
   cors({
     allowedHeaders: [
