@@ -6,7 +6,13 @@ class ProductDAO {
     return false;
   }
   all() {
-    return db("products").select();
+    return db.from("products as p")
+    .leftOuterJoin("brands as b", function () {
+      this.on("p.brand_id", "=", "b.id");
+    })
+    .leftOuterJoin("subcategories as s", function () {
+      this.on("p.sub_id", "=", "s.id");
+    }).select('p.*', 'b.name as brandName', 's.name as subName');
   }
   async createProduct(
     product_name,
@@ -20,6 +26,7 @@ class ProductDAO {
     featured,
     description
   ) {
+    console.log({images})
     const [id] = await db("products")
       .insert({
         product_name,

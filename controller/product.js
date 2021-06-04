@@ -20,14 +20,18 @@ class ProductController {
         })
       } else {
         var files = req.files;  
+        // console.log({req})
+        console.log({files})
         let images = [];
         var count = 0;
     for (let index = 0; index < files.length; index++) {
       const element = files[index].filename; 
+      images.push(element);
       count +=1;
     }
     if(count === files.length) {
       try {
+        console.log({images})
         const result = await productService.createProduct(req.body, images);
         res.status(201).json(result);
       } catch (error) {
@@ -50,7 +54,7 @@ class ProductController {
   }
   async deleteProduct(req, res) { 
     try {
-      const result = await productService.delProduct(req.query.id);
+      const result = await productService.delProduct(req.params.id);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);

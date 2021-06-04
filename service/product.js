@@ -6,6 +6,7 @@ class ProductService {
     return await productDAO.all();
   }
   async createProduct(productData, images) {
+    console.log('service', images)
     const {
       category,
       sub_id,

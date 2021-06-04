@@ -5,6 +5,9 @@ class SubCategoryService {
   async allCategories() {
     return await DAO.all();
   }
+  async findByCategory(category) {
+    return await DAO.findByCategory(category);
+  }
   async exist(name, category) {
     const result = await DAO.exist(name, category);  
     if (result) {

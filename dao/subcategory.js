@@ -12,6 +12,9 @@ class SubCategoryDAO {
       all() {
         return db("subcategories").select();
       }
+      findByCategory(category) {
+        return db("subcategories").where({category}).select();
+      }
       async create(name, category, slug, description) {
         const [id] = await db("subcategories")
           .insert({

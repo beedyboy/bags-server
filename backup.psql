@@ -1,0 +1,175 @@
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO youarec1_root_bags;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO youarec1_root_bags;
+
+CREATE SEQUENCE public.accounts_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+CREATE SEQUENCE public.brands_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+CREATE SEQUENCE public.products_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1
+
+
+CREATE SEQUENCE public.reconcillations_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+CREATE SEQUENCE public.subcategories_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+CREATE SEQUENCE public.subscribers_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+CREATE TABLE public.accounts
+(
+    id integer NOT NULL DEFAULT nextval('accounts_id_seq'::regclass),
+    firstname character varying(30) COLLATE pg_catalog."default",
+    lastname character varying(30) COLLATE pg_catalog."default",
+    username character varying(30) COLLATE pg_catalog."default",
+    address text COLLATE pg_catalog."default",
+    email character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    password text COLLATE pg_catalog."default" NOT NULL,
+    phone character varying(50) COLLATE pg_catalog."default",
+    roles json,
+    "hasRoles" boolean DEFAULT false,
+    token text COLLATE pg_catalog."default",
+    status text COLLATE pg_catalog."default" DEFAULT 'Active'::text,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT accounts_pkey PRIMARY KEY (id),
+    CONSTRAINT accounts_email_unique UNIQUE (email),
+    CONSTRAINT accounts_status_check CHECK (status = ANY (ARRAY['Active'::text, 'Pending'::text, 'Deleted'::text, 'Banned'::text]))
+)
+
+CREATE TABLE public.brands
+(
+    id integer NOT NULL DEFAULT nextval('brands_id_seq'::regclass),
+    name character varying(50) COLLATE pg_catalog."default",
+    description text COLLATE pg_catalog."default",
+    status text COLLATE pg_catalog."default" DEFAULT 'Active'::text,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT brands_pkey PRIMARY KEY (id),
+    CONSTRAINT brands_name_unique UNIQUE (name),
+    CONSTRAINT brands_status_check CHECK (status = ANY (ARRAY['Active'::text, 'Pending'::text, 'Deleted'::text]))
+)
+CREATE TABLE public.subscribers
+(
+    id integer NOT NULL DEFAULT nextval('subscribers_id_seq'::regclass),
+    email character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    status text COLLATE pg_catalog."default" DEFAULT 'Active'::text,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT subscribers_pkey PRIMARY KEY (id),
+    CONSTRAINT subscribers_email_unique UNIQUE (email),
+    CONSTRAINT subscribers_status_check CHECK (status = ANY (ARRAY['Active'::text, 'Pending'::text, 'Deleted'::text]))
+)
+CREATE TABLE public.subcategories
+(
+    id integer NOT NULL DEFAULT nextval('subcategories_id_seq'::regclass),
+    name character varying(50) COLLATE pg_catalog."default",
+    slug character varying(50) COLLATE pg_catalog."default",
+    category character varying(100) COLLATE pg_catalog."default",
+    description text COLLATE pg_catalog."default",
+    status text COLLATE pg_catalog."default" DEFAULT 'Active'::text,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT subcategories_pkey PRIMARY KEY (id),
+    CONSTRAINT subcategories_status_check CHECK (status = ANY (ARRAY['Active'::text, 'Pending'::text, 'Deleted'::text]))
+)
+
+
+CREATE TABLE public.products
+(
+    id integer NOT NULL DEFAULT nextval('products_id_seq'::regclass),
+    category character varying(100) COLLATE pg_catalog."default",
+    sub_id integer,
+    brand_id integer,
+    product_name character varying(50) COLLATE pg_catalog."default",
+    description text COLLATE pg_catalog."default",
+    status text COLLATE pg_catalog."default" DEFAULT 'Active'::text,
+    images text[] COLLATE pg_catalog."default",
+    has_name boolean DEFAULT false,
+    branded boolean DEFAULT false,
+    best boolean DEFAULT false,
+    arrival boolean DEFAULT false,
+    featured boolean DEFAULT false,
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT products_pkey PRIMARY KEY (id),
+    CONSTRAINT products_brand_id_foreign FOREIGN KEY (brand_id)
+        REFERENCES public.brands (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT products_sub_id_foreign FOREIGN KEY (sub_id)
+        REFERENCES public.subcategories (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT products_status_check CHECK (status = ANY (ARRAY['Active'::text, 'Pending'::text, 'Deleted'::text]))
+)
+
+
+
+CREATE TABLE public.reconcillations
+(
+    id integer NOT NULL DEFAULT nextval('reconcillations_id_seq'::regclass),
+    value_date character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    remarks text COLLATE pg_catalog."default",
+    credit_amount real NOT NULL,
+    amount_used real,
+    balance real,
+    customer character varying(50) COLLATE pg_catalog."default",
+    approved_one boolean DEFAULT false,
+    approved_two boolean DEFAULT false,
+    approval_one integer,
+    approval_two integer,
+    reference character varying(30) COLLATE pg_catalog."default",
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT reconcillations_pkey PRIMARY KEY (id),
+    CONSTRAINT reconcillations_approval_one_foreign FOREIGN KEY (approval_one)
+        REFERENCES public.accounts (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT reconcillations_approval_two_foreign FOREIGN KEY (approval_two)
+        REFERENCES public.accounts (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
+INSERT INTO "accounts" (id, firstname, lastname, username, address, email,
+ password, phone,
+  roles,
+   "hasRoles", token, status, created_at, updated_at) 
+VALUES
+(nextval('"accounts_id_seq"'::regclass), 'Bolade', 'Akinniyi', null, null, 'boladebode@gmail.com',
+ '$2a$10$QzBBNQALPeKKN2LjX8m7teqpmVirD08.2o0jerNKw4trNJ5rHEnZK', '07037351836',
+ 	'{"brands":{"add":false,"view":true,"del":true},"category":{"add":true,"view":true,"del":true},
+"company":{"manage":true},"subscribers":{"add":true,"view":true,"del":true},
+"product":{"add":true,"view":true,"del":true},
+"staff":{"add":true,"view":true,"del":true,"modify":true},
+"reconcillation":{"del":true,"approval_one":true,"approval_two":false,"modify":true,"upload":true,"report":true},"report":{"manage":true}}'
+, TRUE, null, 'Active', '2021-05-25 14:46:18.653698+01',	'2021-05-25 14:46:18.653698+01')

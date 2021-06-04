@@ -10,6 +10,15 @@ class SubCategoryController {
       res.status(500).json("something went wrong");
     }
   }
+  async findByCategory(req, res) { 
+    try {
+      const result = await Service.findByCategory(req.params.category);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   async exist(req, res) { 
     try {
       const { name, category } = req.body;

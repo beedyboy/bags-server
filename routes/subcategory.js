@@ -7,5 +7,6 @@ router.post("/confirm", SubCategoryController.exist);
 router.put("/", SubCategoryController.updateData);
 
 router.get("/", SubCategoryController.getAllData);
+router.get("/:category", SubCategoryController.findByCategory);
 router.delete("/:id", SubCategoryController.deleteData);
 module.exports = router;
