@@ -6,7 +6,6 @@ class ProductService {
     return await productDAO.all();
   }
   async createProduct(productData, images) {
-    console.log('service', images)
     const {
       category,
       sub_id,
@@ -32,8 +31,28 @@ class ProductService {
     );
   }
   async updateProduct(productData) {
-    const { name, description, id } = productData;
-    return productDAO.updateProduct(id, name, description);
+    const {
+      id,
+      category,
+      sub_id,
+      brand_id,
+      branded,
+      best,
+      arrival,
+      featured,
+      description,
+    } = productData;
+    return productDAO.updateProduct(
+      id,
+      category,
+      sub_id,
+      brand_id, 
+      branded,
+      best,
+      arrival,
+      featured,
+      description
+    );
   }
   exist(name) {
     const result = productDAO.exist(name);

@@ -19,9 +19,7 @@ class ProductController {
           err
         })
       } else {
-        var files = req.files;  
-        // console.log({req})
-        console.log({files})
+        var files = req.files;   
         let images = [];
         var count = 0;
     for (let index = 0; index < files.length; index++) {
@@ -30,10 +28,9 @@ class ProductController {
       count +=1;
     }
     if(count === files.length) {
-      try {
-        console.log({images})
+      try { 
         const result = await productService.createProduct(req.body, images);
-        res.status(201).json(result);
+        res.status(result.status).json(result);
       } catch (error) {
         console.error(error);
         res.status(500).json("something went wrong");
@@ -46,7 +43,7 @@ class ProductController {
   async updateProduct(req, res) { 
     try {
       const result = await productService.updateProduct(req.body);
-      res.status(201).json(result);
+      res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");

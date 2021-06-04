@@ -25,8 +25,7 @@ class ProductDAO {
     arrival,
     featured,
     description
-  ) {
-    console.log({images})
+  ) { 
     const [id] = await db("products")
       .insert({
         product_name,
@@ -42,14 +41,13 @@ class ProductDAO {
       })
       .returning("id");
     if (id > 0) {
-      return { status: 200, message: "Product created successfully", id };
+      return { status: 201, message: "Product created successfully", id };
     } else {
       return { status: 404, message: "Product was not created" };
     }
   }
   async updateProduct(
-    bid,
-    product_name,
+    bid, 
     category,
     sub_id,
     brand_id,
@@ -61,8 +59,7 @@ class ProductDAO {
   ) {
     const [id] = await db("products")
       .where("id", bid)
-      .update({
-        product_name,
+      .update({ 
         category,
         sub_id,
         brand_id,
