@@ -6,5 +6,5 @@ const knexfile = require('./knexfile');
 // for tests
 
 //TODO
-const db = knex(knexfile.production);
+const db = knex(knexfile.development);
 module.exports = db;

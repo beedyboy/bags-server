@@ -5,6 +5,9 @@ class ProductService {
   async allProducts() {
     return await productDAO.all();
   }
+  async getProductById(id) {
+    return await productDAO.getProductById(id);
+  }
   async createProduct(productData, images) {
     const {
       category,

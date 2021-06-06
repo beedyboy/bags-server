@@ -6,13 +6,28 @@ class ProductDAO {
     return false;
   }
   all() {
-    return db.from("products as p")
-    .leftOuterJoin("brands as b", function () {
-      this.on("p.brand_id", "=", "b.id");
-    })
-    .leftOuterJoin("subcategories as s", function () {
-      this.on("p.sub_id", "=", "s.id");
-    }).select('p.*', 'b.name as brandName', 's.name as subName');
+    return db
+      .from("products as p")
+      .leftOuterJoin("brands as b", function () {
+        this.on("p.brand_id", "=", "b.id");
+      })
+      .leftOuterJoin("subcategories as s", function () {
+        this.on("p.sub_id", "=", "s.id");
+      })
+      .select("p.*", "b.name as brandName", "s.name as subName");
+  }
+
+  getProductById(id) {
+    return db
+      .from("products as p")
+      .where({ id })
+      .leftOuterJoin("brands as b", function () {
+        this.on("p.brand_id", "=", "b.id");
+      })
+      .leftOuterJoin("subcategories as s", function () {
+        this.on("p.sub_id", "=", "s.id");
+      })
+      .first("p.*", "b.name as brandName", "s.name as subName");
   }
   async createProduct(
     product_name,
@@ -25,7 +40,7 @@ class ProductDAO {
     arrival,
     featured,
     description
-  ) { 
+  ) {
     const [id] = await db("products")
       .insert({
         product_name,
@@ -47,7 +62,7 @@ class ProductDAO {
     }
   }
   async updateProduct(
-    bid, 
+    bid,
     category,
     sub_id,
     brand_id,
@@ -59,7 +74,7 @@ class ProductDAO {
   ) {
     const [id] = await db("products")
       .where("id", bid)
-      .update({ 
+      .update({
         category,
         sub_id,
         brand_id,

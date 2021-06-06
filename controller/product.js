@@ -11,6 +11,15 @@ class ProductController {
       res.status(500).json("something went wrong");
     }
   }
+  async getProductById(req, res) { 
+    try {
+      const result = await productService.getProductById(req.params.id);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
   createProduct(req, res) { 
     upload(req, res, async (err) => {
       if(err){

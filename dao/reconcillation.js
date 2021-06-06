@@ -17,8 +17,7 @@ class ReconcillationDAO {
         "a2.lastname as ap2last"
       );
   }
-  filterRecord(data) {
-    // console.log({data})
+  filterRecord(data) { 
     return db
       .from("reconcillations as r")
       .where(data)
