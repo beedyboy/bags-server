@@ -7,8 +7,8 @@ const app = express();
 global.__basedir = __dirname + "/..";
 // app.use(cors())
 
-// const origin = '*';
-const origin = "https://bags-admin.herokuapp.com";
+const origin = '*';
+// const origin = "https://bags-admin.herokuapp.com";
 app.use(
   cors({
     allowedHeaders: [
@@ -29,6 +29,7 @@ app.use(
 app.use(express.json());
 // public folder
 app.use(express.static('./uploads'))
+app.use("/uploads/products", express.static("uploads/products"));
 app.use(router)
 
 

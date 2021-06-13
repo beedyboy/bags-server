@@ -17,6 +17,19 @@ class ProductDAO {
       .select("p.*", "b.name as brandName", "s.name as subName");
   }
 
+  filterProduct(data) { 
+    return db
+      .from("products as p")
+      .where(data)
+      .leftOuterJoin("brands as b", function () {
+        this.on("p.brand_id", "=", "b.id");
+      })
+      .leftOuterJoin("subcategories as s", function () {
+        this.on("p.sub_id", "=", "s.id");
+      })
+      .select("p.*", "b.name as brandName", "s.name as subName");
+ 
+  }
   getProductById(id) {
     return db
       .from("products as p")
