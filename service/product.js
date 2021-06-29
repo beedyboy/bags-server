@@ -8,6 +8,12 @@ class ProductService {
   async getProductById(id) {
     return await productDAO.getProductById(id);
   }
+  async getProductByCategory(name) {
+    return await productDAO.getProductByCategory(name);
+  }
+  async getProductByName(name) {
+    return await productDAO.getProductByName(name);
+  }
   async createProduct(productData, images) {
     const {
       category,

@@ -12,8 +12,26 @@ class ProductController {
     }
   }
   async getProductById(req, res) { 
-    try {
+    try { 
       const result = await productService.getProductById(req.params.id);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async getProductByName(req, res) { 
+    try { 
+      const result = await productService.getProductByName(req.params.name);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async getProductByCategory(req, res) { 
+    try {
+      const result = await productService.getProductByCategory(req.params.name);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);

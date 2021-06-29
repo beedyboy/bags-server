@@ -30,10 +30,11 @@ class ProductDAO {
       .select("p.*", "b.name as brandName", "s.name as subName");
  
   }
+
   getProductById(id) {
     return db
       .from("products as p")
-      .where({ id })
+      .where('p.id', id)
       .leftOuterJoin("brands as b", function () {
         this.on("p.brand_id", "=", "b.id");
       })
@@ -42,6 +43,34 @@ class ProductDAO {
       })
       .first("p.*", "b.name as brandName", "s.name as subName");
   }
+
+  getProductByName(name) {
+    return db
+      .from("products as p")
+      .where('p.product_name', name)
+      .leftOuterJoin("brands as b", function () {
+        this.on("p.brand_id", "=", "b.id");
+      })
+      .leftOuterJoin("subcategories as s", function () {
+        this.on("p.sub_id", "=", "s.id");
+      })
+      .first("p.*", "b.name as brandName", "s.name as subName");
+  }
+
+  getProductByCategory(category) {
+    return db 
+      .from("products as p")
+      .where('p.category', category)
+      .leftOuterJoin("brands as b", function () {
+        this.on("p.brand_id", "=", "b.id");
+      })
+      .leftOuterJoin("subcategories as s", function () {
+        this.on("p.sub_id", "=", "s.id");
+      })
+      .select("p.*", "b.name as brandName", "s.name as subName");
+     
+  }
+
   async createProduct(
     product_name,
     category,
