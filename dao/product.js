@@ -54,7 +54,7 @@ class ProductDAO {
       .leftOuterJoin("subcategories as s", function () {
         this.on("p.sub_id", "=", "s.id");
       })
-      .first("p.*", "b.name as brandName", "s.name as subName");
+      .first("p.*", "b.name as brandName", "b.id as brand_id", "s.name as subName", "s.id as sub_id", "s.slug as subSlug");
   }
 
   getProductByCategory(category) {

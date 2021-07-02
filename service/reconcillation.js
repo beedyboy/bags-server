@@ -43,7 +43,7 @@ class ReconcillationService {
       }
       // console.log({datas})
       if (datas.length > 0) {
-        console.log("length", datas.length);
+        // console.log("length", datas.length);
         // lr = { status: 200, message: "Upload was successful"}
         lr = await reconcillationDAO.saveUpload(datas);
       } else {
