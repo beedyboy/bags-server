@@ -1,18 +1,18 @@
-const Service = require("../service/subscription");
+const Service = require("../service/contact");
 
-class SubscriberController {
-  async getAllSubscribers(req, res) { 
+class ContactController {
+  async getAllMessages(req, res) { 
     try {
-      const result = await Service.allSubscribers();
+      const result = await Service.allMessages();
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
     }
   }
-  async subscribe(req, res) { 
+  async contactus(req, res) { 
     try {
-      const result = await Service.createSubscription(req.body);
+      const result = await Service.contactus(req.body);
       res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
@@ -21,16 +21,16 @@ class SubscriberController {
   }
   async update(req, res) { 
     try {
-      const result = await Service.updateSubscription(req.body);
+      const result = await Service.updateContact(req.body);
       res.status(result.status).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
     }
   }
-  async unsubscribe(req, res) { 
+  async remove(req, res) { 
     try {
-      const result = await Service.unsubscribe(req.query.id);
+      const result = await Service.remove(req.query.id);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -38,4 +38,4 @@ class SubscriberController {
     }
   }
 }
-module.exports = new SubscriberController();
+module.exports = new ContactController();
