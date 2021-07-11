@@ -10,20 +10,7 @@ exports.up = function (knex) {
           .enu("status", ["Read", "UnRead", "Deleted"])
           .defaultTo("UnRead");
         table.timestamps(true, true);
-      })
-     
-      .createTable("settings", function (subTable) {
-        subTable.increments();
-        subTable.string("name", 50).nullable();
-        subTable.string("slug", 50).nullable();
-        subTable.string("category", 100).nullable();
-        subTable.text("description").nullable();
-        subTable
-          .enu("status", ["Active", "Pending", "Deleted"])
-          .defaultTo("Active");
-        subTable.timestamps(true, true);
-      })
-   
+      }) 
       .then(() => console.log("table created"))
       .catch((err) => {
         console.log(err);

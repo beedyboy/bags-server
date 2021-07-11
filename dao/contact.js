@@ -10,7 +10,7 @@ class ContactDAO {
   }
   async contactus(data) {
     const status = "UnRead";
-    const { email, email, fullname, description, phone } = data;
+    const { email, fullname, description, phone } = data;
     const [id] = await db("contacts")
       .insert({
         email,

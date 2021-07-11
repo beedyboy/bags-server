@@ -7,5 +7,5 @@ router.put("/", Controller.update);
 
 router.get("/", Controller.getAllMessages);
 // router.get("/:category", Controller.findByCategory);
-router.delete("/:id", Controller.deleteData);
+router.delete("/:id", Controller.remove);
 module.exports = router;
