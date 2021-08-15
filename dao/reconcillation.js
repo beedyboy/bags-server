@@ -54,13 +54,14 @@ class ReconcillationDAO {
     }
   }
   async firstApproval(data, uid) {
-    const { id: rid, approved_one, amount_used, balance } = data;
+    const { id: rid, approved_one, amount_used, balance, reference } = data;
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({
         approved_one,
         amount_used,
         balance,
+        reference,
         approval_one: uid,
       })
       .returning("id");

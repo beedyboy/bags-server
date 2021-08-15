@@ -32,6 +32,7 @@ class ReconcillationController {
       console.error({ error });
       res.status(500).send({
         message: "Could not upload the file: " + req.file.originalname,
+        error
       });
       // res.status(500).json({message: "Fail to import data into database!",
       // error: error.message,});

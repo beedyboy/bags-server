@@ -16,7 +16,20 @@ const Assistant = {
       getDateAsArray(end_date).diff(getDateAsArray(start_date), "days") + 1
     );
   },
+  getRandomizer: (bottom, top) => {
+    return function () {
+      return Math.floor(Math.random() * (1 + top - bottom)) + bottom;
+    };
+  },
+  generateOTP: () => {
+    var rollDie = Assistant.getRandomizer(0, 9);
 
+    var results = "";
+    for (var i = 0; i < 7; i++) {
+      results += rollDie() + " "; //make a string filled with 1000 random numbers in the range 1-6.
+    }
+    return results;
+  },
   useDate: () => {
     const today = new Date();
     var mm = String(today.getMonth() + 1).padStart(2, "0");

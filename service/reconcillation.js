@@ -2,6 +2,7 @@ const reconcillationDAO = require("../dao/reconcillation");
 const readXlsxFile = require("read-excel-file/node");
 const moment = require("moment");
 const { getJsDateFromExcel } = require("excel-date-to-js");
+const Assistant = require("../helpers/Assistant");
 // do validation
 class ReconcillationService {
   async allData() {
@@ -13,7 +14,7 @@ class ReconcillationService {
       data = { approved_one: value}
     }
     if(key === "approved_two") {
-      data = { approved_two: value}
+      data = { approved_one: true, approved_two: value}
     }
     return await reconcillationDAO.filterRecord(data);
   }
@@ -29,11 +30,11 @@ class ReconcillationService {
         let data = {
           value_date: moment(getJsDateFromExcel(row[2])).format("DD-MM-YYYY"),
           remarks: row[4],
-          credit_amount: row[3],
+          credit_amount: row[3] || 0,
         };
         const check = await reconcillationDAO.exist({
           value_date: moment(getJsDateFromExcel(row[2])).format("DD-MM-YYYY"),
-          remarks: row[4],
+          remarks: row[4] || 'N/A',
         });
         if (!check) {
           datas.push(data);
@@ -53,6 +54,8 @@ class ReconcillationService {
     return lr;
   }
   async firstApproval(data, id) {
+   const reference = await Assistant.generateOTP();
+   data.reference = reference;
     return reconcillationDAO.firstApproval(data, id);
   }
   async secondApproval(data, id) {

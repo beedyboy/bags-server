@@ -1,7 +1,6 @@
 const express = require('express');
 const router = require('./routes');
-const cors = require('cors');
-
+const cors = require('cors');  
 const app = express();
 
 global.__basedir = __dirname + "/..";
@@ -26,6 +25,7 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+ 
 app.use(express.json());
 // public folder
 app.use(express.static('./uploads'))
