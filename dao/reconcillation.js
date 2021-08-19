@@ -17,7 +17,7 @@ class ReconcillationDAO {
         "a2.lastname as ap2last"
       );
   }
-  filterRecord(data) { 
+  filterRecord(data) {
     return db
       .from("reconcillations as r")
       .where(data)
@@ -40,6 +40,11 @@ class ReconcillationDAO {
     if (result.length > 0) return true;
     return false;
   }
+  async max(value) {
+    const result = await db("reconcillations").max(value);
+
+    return result;
+  }
   async saveUpload(data) {
     const [id] = await db("reconcillations").insert(data).returning("id");
     if (id > 0) {
@@ -54,7 +59,7 @@ class ReconcillationDAO {
     }
   }
   async firstApproval(data, uid) {
-    const { id: rid, approved_one, amount_used, balance, reference } = data;
+    const { id: rid, approved_one, amount_used, balance, reference } = data; 
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({
@@ -68,7 +73,7 @@ class ReconcillationDAO {
     if (id > 0) {
       return {
         status: 200,
-        message: "Record updated successfully",
+        message: `Record updated successfully. Reference Number is ${reference}`,
         id,
       };
     } else {
@@ -77,7 +82,7 @@ class ReconcillationDAO {
   }
   async secondApproval(data, uid) {
     const { id: rid, approved_two } = data;
-    console.log({approved_two})
+    console.log({ approved_two });
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({
@@ -96,7 +101,14 @@ class ReconcillationDAO {
     }
   }
   async overturn(data) {
-    const { id: rid, approved_one, approved_two, amount_used, balance } = data;
+    const {
+      id: rid,
+      approved_one,
+      approved_two,
+      cancellation_number,
+      amount_used,
+      balance,
+    } = data;
     const [id] = await db("reconcillations")
       .where("id", rid)
       .update({
@@ -104,12 +116,13 @@ class ReconcillationDAO {
         balance,
         approved_one,
         approved_two,
+        cancellation_number,
       })
       .returning("id");
     if (id > 0) {
       return {
         status: 200,
-        message: "Record overturned successfully",
+        message: `Record overturned successfully. Cancellation number is: ${cancellation_number}`,
         id,
       };
     } else {

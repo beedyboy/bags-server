@@ -1,6 +1,51 @@
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO youarec1_root_bags;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO youarec1_root_bags;
 
+
+CREATE OR REPLACE FUNCTION audit_trail()
+  RETURNS TRIGGER 
+  LANGUAGE PLPGSQL
+  AS
+$$
+BEGIN
+
+INSERT INTO audits(recon_id,
+  value_date,
+  remarks,
+  credit_amount,
+amount_used,
+balance,
+customer,
+approved_one, 
+approved_two,
+approval_one,
+approval_two,
+reference,
+ cancellation_number) VALUES (old.id, 
+ old.value_date,
+ old.remarks,
+ old.credit_amount,
+old.amount_used,
+old.balance,
+old.customer,
+old.approved_one,
+old.approved_two,
+old.approval_one,	 
+old.approval_two,
+old.reference,
+old.cancellation_number,
+current_timestamp);
+RETURN NEW;
+END;
+$$
+
+CREATE TRIGGER audit_recon
+BEFORE UPDATE
+ON reconcillations
+FOR EACH ROW
+EXECUTE PROCEDURE audit_trail();
+
+
 CREATE SEQUENCE public.accounts_id_seq
     INCREMENT 1
     START 1

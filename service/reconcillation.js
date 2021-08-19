@@ -1,8 +1,7 @@
 const reconcillationDAO = require("../dao/reconcillation");
 const readXlsxFile = require("read-excel-file/node");
 const moment = require("moment");
-const { getJsDateFromExcel } = require("excel-date-to-js");
-const Assistant = require("../helpers/Assistant");
+const { getJsDateFromExcel } = require("excel-date-to-js"); 
 // do validation
 class ReconcillationService {
   async allData() {
@@ -54,14 +53,25 @@ class ReconcillationService {
     return lr;
   }
   async firstApproval(data, id) {
-   const reference = await Assistant.generateOTP();
-   data.reference = reference;
+   const result = await reconcillationDAO.max('reference'); 
+   if(result.length > 0) { 
+     const  reference = result[0].max !== null ? parseInt(result[0].max) + 1 : 1; 
+    data.reference = String(reference).padStart(7, '0');
+   }
+   if(data.amount_used !== data.credit_amount) {
+    data.approved_one = false;
+  }
     return reconcillationDAO.firstApproval(data, id);
   }
   async secondApproval(data, id) {
     return reconcillationDAO.secondApproval(data, id);
   }
   async overturn(data) {
+    const result = await reconcillationDAO.max('cancellation_number'); 
+   if(result.length > 0) { 
+     const  cancellation_number = result[0].max !== null ? parseInt(result[0].max) + 1 : 1; 
+    data.cancellation_number = String(cancellation_number).padStart(7, '0');
+   }
     return reconcillationDAO.overturn(data);
   } 
   async delRecord(id) {
