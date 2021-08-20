@@ -12,8 +12,17 @@ class ReconcillationController {
   }
   async filterRecord(req, res) {
     try {
-      const { key, value }  = req.params; 
+      const { key, value } = req.params;
       const result = await Service.filterRecord(key, value);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async finalReport(req, res) {
+    try {
+      const result = await Service.finalReport(req.body);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -32,7 +41,7 @@ class ReconcillationController {
       console.error({ error });
       res.status(500).send({
         message: "Could not upload the file: " + req.file.originalname,
-        error
+        error,
       });
       // res.status(500).json({message: "Fail to import data into database!",
       // error: error.message,});

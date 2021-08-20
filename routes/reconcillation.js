@@ -17,8 +17,8 @@ router.post(
   "/second-approval",
   Authenticated(reconcillationController.secondApproval)
 );
-router.post("/overturn", reconcillationController.overturn);
-
+router.post("/overturn", Authenticated(reconcillationController.overturn));
+router.post("/final/report", Authenticated(reconcillationController.finalReport)); 
 router.get("/", reconcillationController.getAllRecord);
 router.get("/:key/:value", reconcillationController.filterRecord);
 router.delete("/:id", reconcillationController.delRecord);

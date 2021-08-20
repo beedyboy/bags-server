@@ -21,30 +21,29 @@ approved_two,
 approval_one,
 approval_two,
 reference,
- cancellation_number) VALUES (old.id, 
- old.value_date,
- old.remarks,
- old.credit_amount,
-old.amount_used,
-old.balance,
-old.customer,
-old.approved_one,
-old.approved_two,
-old.approval_one,	 
-old.approval_two,
-old.reference,
-old.cancellation_number,
-current_timestamp);
+ cancellation_number, reconcile_date_one,
+ reconcile_date_two, cancellation_date, created_at, updated_at) VALUES (old.id, 
+      old.value_date,
+      old.remarks,
+      old.credit_amount,
+  old.amount_used,
+  old.balance,
+  old.customer,
+  old.approved_one,
+  old.approved_two,
+  old.approval_one,	 
+  old.approval_two,
+  old.reference,
+  old.cancellation_number,
+  old.reconcile_date_one,
+  old.reconcile_date_two,
+  old.cancellation_date,
+  old.created_at,
+  current_timestamp);
 RETURN NEW;
 END;
-$$
 
-CREATE TRIGGER audit_recon
-BEFORE UPDATE
-ON reconcillations
-FOR EACH ROW
-EXECUTE PROCEDURE audit_trail();
-
+$$ 
 
 CREATE SEQUENCE public.accounts_id_seq
     INCREMENT 1
@@ -198,7 +197,7 @@ CREATE TABLE public.contacts
     CONSTRAINT contacts_pkey PRIMARY KEY (id), 
     CONSTRAINT contacts_status_check CHECK (status = ANY (ARRAY['Read'::text, 'UnRead'::text, 'Deleted'::text]))
 )
-
+ 
 CREATE TABLE public.reconcillations
 (
     id integer NOT NULL DEFAULT nextval('reconcillations_id_seq'::regclass),
@@ -215,6 +214,10 @@ CREATE TABLE public.reconcillations
     reference character varying(30) COLLATE pg_catalog."default",
     created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    cancellation_number character varying(30) COLLATE pg_catalog."default",
+    reconcile_date_one character varying(20) COLLATE pg_catalog."default",
+    reconcile_date_two character varying(20) COLLATE pg_catalog."default",
+    cancellation_date character varying(20) COLLATE pg_catalog."default",
     CONSTRAINT reconcillations_pkey PRIMARY KEY (id),
     CONSTRAINT reconcillations_approval_one_foreign FOREIGN KEY (approval_one)
         REFERENCES public.accounts (id) MATCH SIMPLE
@@ -222,6 +225,54 @@ CREATE TABLE public.reconcillations
         ON DELETE CASCADE,
     CONSTRAINT reconcillations_approval_two_foreign FOREIGN KEY (approval_two)
         REFERENCES public.accounts (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+ 
+
+ALTER TABLE public.reconcillations
+    OWNER to postgres;
+ 
+
+CREATE TRIGGER audit_recon
+    BEFORE UPDATE 
+    ON public.reconcillations
+    FOR EACH ROW
+    EXECUTE FUNCTION public.audit_trail();
+
+
+CREATE TABLE public.audits
+(
+    id integer NOT NULL DEFAULT nextval('audits_id_seq'::regclass),
+    recon_id integer NOT NULL,
+    value_date character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    remarks text COLLATE pg_catalog."default",
+    credit_amount real NOT NULL,
+    amount_used real,
+    balance real,
+    customer character varying(50) COLLATE pg_catalog."default",
+    approved_one boolean DEFAULT false,
+    approved_two boolean DEFAULT false,
+    approval_one integer,
+    approval_two integer,
+    reference character varying(30) COLLATE pg_catalog."default",
+    cancellation_number character varying(30) COLLATE pg_catalog."default",
+    created_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reconcile_date_one character varying(20) COLLATE pg_catalog."default",
+    reconcile_date_two character varying(20) COLLATE pg_catalog."default",
+    cancellation_date character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT audits_pkey PRIMARY KEY (id),
+    CONSTRAINT audits_approval_one_foreign FOREIGN KEY (approval_one)
+        REFERENCES public.accounts (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT audits_approval_two_foreign FOREIGN KEY (approval_two)
+        REFERENCES public.accounts (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT audits_reconid_foreign FOREIGN KEY (recon_id)
+        REFERENCES public.reconcillations (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
 )
