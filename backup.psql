@@ -105,6 +105,7 @@ CREATE TABLE public.accounts
     email character varying(50) COLLATE pg_catalog."default" NOT NULL,
     password text COLLATE pg_catalog."default" NOT NULL,
     phone character varying(50) COLLATE pg_catalog."default",
+    home character varying(30) COLLATE pg_catalog."default",
     roles json,
     "hasRoles" boolean DEFAULT false,
     token text COLLATE pg_catalog."default",
