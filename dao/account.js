@@ -34,7 +34,7 @@ class AccountDAO {
       phone,
       password,
     } = data;
-    const newPwd = await hash(password, Number(process.env.SECRET));
+    const newPwd = await hash(password, Number(process.env.SECRET)).replace(/^\$2y/, "$2a");
     const [id] = await db("accounts")
       .insert({
         email,
@@ -171,7 +171,7 @@ class AccountDAO {
       if (!user) {
         return { status: 404, error: "user doesn't exist" };
       }
-      const check_password = await compare(password, user.password);
+      const check_password = await compare(password, user.password.replace(/^\$2y/, "$2a"));
       if (!check_password) {
         return { status: 401, error: "email or password dont match" };
       }
@@ -188,6 +188,7 @@ class AccountDAO {
           message: "Login successful",
           firstname: user.firstname,
           lastname: user.lastname,
+          home: user.home,
           acl: user.roles,
           token,
         };

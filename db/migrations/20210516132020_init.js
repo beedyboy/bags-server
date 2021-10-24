@@ -9,6 +9,7 @@ exports.up = function (knex) {
       table.string("email", 50).notNullable().unique();
       table.text("password").notNullable();
       table.string("phone", 50).nullable();
+      table.string("home", 30).nullable();
       table.json("roles");
       table.boolean("hasRoles").nullable().defaultTo(false);
       table.text("token").nullable();
@@ -58,7 +59,8 @@ exports.up = function (knex) {
       productTable
         .enu("status", ["Active", "Pending", "Deleted"])
         .defaultTo("Active");
-      productTable.specificType("images", "text ARRAY");
+      // productTable.specificType("images", "text ARRAY");
+      productTable.json("images");
       productTable.boolean("has_name").nullable().defaultTo(false);
       productTable.boolean("branded").nullable().defaultTo(false);
       productTable.boolean("best").nullable().defaultTo(false);
@@ -91,6 +93,10 @@ exports.up = function (knex) {
       recTable.integer("approval_one").unsigned().nullable();
       recTable.integer("approval_two").unsigned().nullable();
       recTable.string("reference", 30).nullable();
+      recTable.string("cancellation_number", 30).nullable();
+      recTable.string("cancellation_date", 30).nullable();
+      recTable.string("reconcile_date_one", 30).nullable();
+      recTable.string("reconcile_date_two", 30).nullable(); 
       recTable.timestamps(true, true);
       recTable
         .foreign("approval_one")
