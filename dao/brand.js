@@ -12,14 +12,14 @@ class BrandDAO {
     return db("brands").select();
   }
   async createBrand(name, description) {
-    const [id] = await db("brands")
+    const id = await db("brands")
       .insert({
         name,
         description,
       })
       .onConflict("name")
-      .ignore()
-      .returning("id");
+      .ignore();
+      // .returning("id");
     if (id > 0) {
       return { status: 201, message: "Brand created successfully", id };
     } else {
