@@ -52,6 +52,6 @@ exports.up = function (knex) {
   };
   
   exports.down = function (knex) {
-    return knex.schema.dropTable("accounts");
+    return knex.schema.dropTable("audits");
   };
   

@@ -60,12 +60,12 @@ class ReconcillationDAO {
     return false;
   }
   async max(value) {
-    const result = await db("reconcillations").max(value);
+    return await db("reconcillations").max(value, { as: "total" });
 
-    return result;
+    // return (result[0].total === null ? 1 :  result[0].total);
   }
   async saveUpload(data) {
-    const [id] = await db("reconcillations").insert(data).returning("id");
+    const id = await db("reconcillations").insert(data);
     if (id > 0) {
       console.log("id is", id);
       return {
@@ -87,17 +87,15 @@ class ReconcillationDAO {
         balance,
         reference,
       } = data;
-      const [id] = await db("reconcillations")
-        .where("id", rid)
-        .update({
-          approved_one,
-          amount_used,
-          balance,
-          reference,
-          approval_one: uid,
-          reconcile_date_one,
-        })
-        .returning("id");
+      const id = await db("reconcillations").where("id", rid).update({
+        approved_one,
+        amount_used,
+        balance,
+        reference,
+        approval_one: uid,
+        reconcile_date_one,
+      });
+      // .returning("id");
       if (id > 0) {
         return {
           status: 200,
@@ -114,15 +112,12 @@ class ReconcillationDAO {
   async secondApproval(data, uid) {
     try {
       const { id: rid, approved_two, reconcile_date_two } = data;
-      console.log({ approved_two });
-      const [id] = await db("reconcillations")
-        .where("id", rid)
-        .update({
-          approved_two,
-          approval_two: uid,
-          reconcile_date_two,
-        })
-        .returning("id");
+      const id = await db("reconcillations").where("id", rid).update({
+        approved_two,
+        approval_two: uid,
+        reconcile_date_two,
+      });
+      // .returning("id");
       if (id > 0) {
         return {
           status: 200,
@@ -148,19 +143,17 @@ class ReconcillationDAO {
       balance,
       cancellation_date,
     } = data;
-    const [id] = await db("reconcillations")
-      .where("id", rid)
-      .update({
-        amount_used,
-        balance,
-        approved_one,
-        approved_two,
-        cancellation_number,
-        reconcile_date_one,
-        reconcile_date_two,
-        cancellation_date,
-      })
-      .returning("id");
+    const id = await db("reconcillations").where("id", rid).update({
+      amount_used,
+      balance,
+      approved_one,
+      approved_two,
+      cancellation_number,
+      reconcile_date_one,
+      reconcile_date_two,
+      cancellation_date,
+    });
+    // .returning("id");
     if (id > 0) {
       return {
         status: 200,

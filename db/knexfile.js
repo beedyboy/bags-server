@@ -8,7 +8,19 @@ module.exports = {
       port: 3306,
       user: "root",
       password: "dontopen",
-      database: "bags",
+      database: "bags", 
+      timezone: 'UTC',
+      dateStrings: true,
+      typeCast: function (field, next) {
+        if (field.type === 'JSON') {
+          return (JSON.parse(field.string()))
+        }
+        if (field.type == 'TINY' && field.length == 1) {
+          return (field.string() == '1'); // 1 = true, 0 = false
+      } 
+        return next()
+      }
+  
     },
     pool: {
       min: 2,

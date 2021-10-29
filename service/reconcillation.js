@@ -60,8 +60,7 @@ class ReconcillationService {
   async firstApproval(data, id) {
     const result = await reconcillationDAO.max("reference");
     if (result.length > 0) {
-      const reference =
-        result[0].max !== null ? parseInt(result[0].max) + 1 : 1;
+      const reference = result[0].total !== null ? parseInt(result[0].total) + 1 : 1; 
       data.reference = String(reference).padStart(7, "0");
     }
     if (data.amount_used !== data.credit_amount) {
@@ -80,7 +79,7 @@ class ReconcillationService {
     const result = await reconcillationDAO.max("cancellation_number");
     if (result.length > 0) {
       const cancellation_number =
-        result[0].max !== null ? parseInt(result[0].max) + 1 : 1;
+        result[0].total !== null ? parseInt(result[0].total) + 1 : 1;
       data.cancellation_number = String(cancellation_number).padStart(7, "0");
     }
     data.balance = null;

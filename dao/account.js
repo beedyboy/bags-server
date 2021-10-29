@@ -34,18 +34,18 @@ class AccountDAO {
       phone,
       password,
     } = data;
-    const newPwd = await hash(password, Number(process.env.SECRET)).replace(/^\$2y/, "$2a");
-    const [id] = await db("accounts")
-      .insert({
-        email,
-        firstname,
-        lastname,
-        username,
-        address,
-        phone,
-        password: newPwd,
-      })
-      .returning("id");
+    const newPwd = await hash(password, Number(process.env.SECRET));
+
+    const id = await db("accounts").insert({
+      email,
+      firstname,
+      lastname,
+      username,
+      address,
+      phone,
+      password: newPwd,
+    });
+    // .returning("id");
     if (id > 0) {
       return { status: 201, message: "Account created successfully", id };
     } else {
@@ -72,17 +72,15 @@ class AccountDAO {
           : true
         : false;
     if (exist === false) {
-      const [id] = await db("accounts")
-        .where("id", uid)
-        .update({
-          email,
-          firstname,
-          lastname,
-          username,
-          address,
-          phone,
-        })
-        .returning("id");
+      const id = await db("accounts").where("id", uid).update({
+        email,
+        firstname,
+        lastname,
+        username,
+        address,
+        phone,
+      });
+      // .returning("id");
       if (id > 0) {
         return {
           status: 200,
@@ -100,16 +98,14 @@ class AccountDAO {
   async updateProfile(data, uid) {
     const { firstname, lastname, username, address, phone } = data;
 
-    const [id] = await db("accounts")
-      .where("id", uid)
-      .update({
-        firstname,
-        lastname,
-        username,
-        address,
-        phone,
-      })
-      .returning("id");
+    const id = await db("accounts").where("id", uid).update({
+      firstname,
+      lastname,
+      username,
+      address,
+      phone,
+    });
+    // .returning("id");
     if (id > 0) {
       return {
         status: 200,
@@ -143,17 +139,16 @@ class AccountDAO {
     return false;
   }
   async setRoles(data) {
-    const { priviledges, home,  id: uid } = data;
-    const roles =  JSON.stringify(priviledges); 
+    const { priviledges, home, id: uid } = data; 
+    try {
+      const roles = JSON.stringify(priviledges);
     const hasRoles = true;
-    const [id] = await db("accounts")
-      .where("id", uid)
-      .update({
-        roles,
-        home,
-        hasRoles,
-      })
-      .returning("id");
+    const id = await db("accounts").where("id", uid).update({
+      roles,
+      home,
+      hasRoles,
+    }); 
+    // .returning("id");
     if (id > 0) {
       return {
         status: 200,
@@ -163,6 +158,9 @@ class AccountDAO {
     } else {
       return { status: 422, error: "Error updating record" };
     }
+    } catch (error) {
+      console.log({error});
+    }
   }
   async auth(data) {
     try {
@@ -171,17 +169,15 @@ class AccountDAO {
       if (!user) {
         return { status: 404, error: "user doesn't exist" };
       }
-      const check_password = await compare(password, user.password.replace(/^\$2y/, "$2a"));
+
+      const check_password = await compare(password, user.password);
       if (!check_password) {
-        return { status: 401, error: "email or password dont match" };
+        return { status: 401, error: "email or password dont match", user };
       }
       const token = await sign({ id: user.id }, `${process.env.SECRET_KEY}`);
-      const [id] = await db("accounts")
-        .where("id", user.id)
-        .update({
-          token,
-        })
-        .returning("id");
+      const id = await db("accounts").where("id", user.id).update({
+        token,
+      }); 
       if (id > 0) {
         return {
           status: 201,
@@ -196,8 +192,10 @@ class AccountDAO {
         return { status: 404, message: "Error getting account information" };
       }
     } catch (error) {
+      console.log({error});
       return { status: 401, error: "email or password dont match" };
     }
   }
 }
 module.exports = new AccountDAO();
+

@@ -11,7 +11,7 @@ class ProductDAO {
       .leftOuterJoin("brands as b", function () {
         this.on("p.brand_id", "=", "b.id");
       })
-      .leftOuterJoin("subcategories as s", function () {
+      .leftOuterJoin("sub_categories as s", function () {
         this.on("p.sub_id", "=", "s.id");
       })
       .select("p.*", "b.name as brandName", "s.name as subName");
@@ -24,7 +24,7 @@ class ProductDAO {
       .leftOuterJoin("brands as b", function () {
         this.on("p.brand_id", "=", "b.id");
       })
-      .leftOuterJoin("subcategories as s", function () {
+      .leftOuterJoin("sub_categories as s", function () {
         this.on("p.sub_id", "=", "s.id");
       })
       .select("p.*", "b.name as brandName", "s.name as subName");
@@ -38,7 +38,7 @@ class ProductDAO {
       .leftOuterJoin("brands as b", function () {
         this.on("p.brand_id", "=", "b.id");
       })
-      .leftOuterJoin("subcategories as s", function () {
+      .leftOuterJoin("sub_categories as s", function () {
         this.on("p.sub_id", "=", "s.id");
       })
       .first("p.*", "b.name as brandName", "s.name as subName");
@@ -51,7 +51,7 @@ class ProductDAO {
       .leftOuterJoin("brands as b", function () {
         this.on("p.brand_id", "=", "b.id");
       })
-      .leftOuterJoin("subcategories as s", function () {
+      .leftOuterJoin("sub_categories as s", function () {
         this.on("p.sub_id", "=", "s.id");
       })
       .first("p.*", "b.name as brandName", "b.id as brand_id", "s.name as subName", "s.id as sub_id", "s.slug as subSlug");
@@ -64,7 +64,7 @@ class ProductDAO {
       .leftOuterJoin("brands as b", function () {
         this.on("p.brand_id", "=", "b.id");
       })
-      .leftOuterJoin("subcategories as s", function () {
+      .leftOuterJoin("sub_categories as s", function () {
         this.on("p.sub_id", "=", "s.id");
       })
       .select("p.*", "b.name as brandName", "s.name as subName");
@@ -83,7 +83,7 @@ class ProductDAO {
     featured,
     description
   ) {
-    const [id] = await db("products")
+    const id = await db("products")
       .insert({
         product_name,
         category,
@@ -95,8 +95,8 @@ class ProductDAO {
         arrival,
         featured,
         description,
-      })
-      .returning("id");
+      });
+      // .returning("id");
     if (id > 0) {
       return { status: 201, message: "Product created successfully", id };
     } else {
@@ -114,7 +114,7 @@ class ProductDAO {
     featured,
     description
   ) {
-    const [id] = await db("products")
+    const id = await db("products")
       .where("id", bid)
       .update({
         category,
@@ -125,8 +125,8 @@ class ProductDAO {
         arrival,
         featured,
         description,
-      })
-      .returning("id");
+      });
+      // .returning("id");
     if (id > 0) {
       return {
         status: 200,

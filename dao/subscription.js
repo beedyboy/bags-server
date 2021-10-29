@@ -10,14 +10,13 @@ class SubscriptionDAO {
   }
   async subscribe(email, status ="Active") {
     
-    const [id] = await db("subscribers")
+    const id = await db("subscribers")
       .insert({
         email, 
         status
       })
       .onConflict('email')
-      .merge(['email', 'status', 'updated_at'])
-      .returning("id");
+      .merge(['email', 'status', 'updated_at']);
     if (id > 0) {
       return { status: 200, message: "You have successfully subscribed to our services", id };
     } else {
@@ -25,14 +24,13 @@ class SubscriptionDAO {
     }
   }
   async update(bid, email, status) {
-    const [id] = await db("subscribers")
+    const id= await db("subscribers")
       .where("id", bid)
       .update({
         email,
         status,
       }).onConflict('email')
-      .merge(['status', 'email', 'updated_at'])
-      .returning("id");
+      .merge(['status', 'email', 'updated_at']);
     if (id > 0) {
       return { status: 200, message: "Subscription record updated successfully", id };
     } else {

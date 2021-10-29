@@ -6,5 +6,6 @@ const knexfile = require('./knexfile');
 // for tests
 
 //TODO
-const db = knex(knexfile.production);
+const db = knex(knexfile.test);
+db.raw('CURRENT_TIMESTAMP');
 module.exports = db;

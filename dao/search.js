@@ -24,7 +24,7 @@ class SearchDAO {
       .leftOuterJoin("brands as b", function () {
         this.on("p.brand_id", "=", "b.id");
       })
-      .leftOuterJoin("subcategories as s", function () {
+      .leftOuterJoin("sub_categories as s", function () {
         this.on("p.sub_id", "=", "s.id");
       })
       .select("p.*", "b.name as brandName", "s.name as subName");
@@ -60,7 +60,7 @@ class SearchDAO {
     //   .leftOuterJoin("brands as b", function () {
     //     this.on("p.brand_id", "=", "b.id");
     //   })
-    //   .leftOuterJoin("subcategories as s", function () {
+    //   .leftOuterJoin("sub_categories as s", function () {
     //     this.on("p.sub_id", "=", "s.id");
     //   })
     //   .select("p.*", "b.name as brandName", "s.name as subName");

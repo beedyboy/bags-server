@@ -27,15 +27,15 @@ class BrandDAO {
     }
   }
   async updateBrand(bid, name, description) {
-    const [id] = await db("brands")
+    const id = await db("brands")
       .where("id", bid)
       .update({
         name,
         description,
       })
       .onConflict("name")
-      .merge(["description", "name", "updated_at"])
-      .returning("id");
+      .merge(["description", "name", "updated_at"]);
+      // .returning("id");
     if (id > 0) {
       return { status: 200, message: "Brand record updated successfully", id };
     } else {
