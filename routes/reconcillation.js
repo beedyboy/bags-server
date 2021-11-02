@@ -20,6 +20,7 @@ router.post(
 router.post("/overturn", Authenticated(reconcillationController.overturn));
 router.post("/final/report", Authenticated(reconcillationController.finalReport)); 
 router.get("/", reconcillationController.getAllRecord);
+router.get("/files", reconcillationController.getAllFiles);
 router.get("/:key/:value", reconcillationController.filterRecord);
 router.delete("/:id", reconcillationController.delRecord);
 

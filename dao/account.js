@@ -117,7 +117,7 @@ class AccountDAO {
     }
   }
   myProfile(id) {
-    return db("accounts")
+   return db("accounts")
       .where({ id })
       .first(
         "id",
@@ -131,7 +131,10 @@ class AccountDAO {
         "status",
         "created_at",
         "updated_at"
-      );
+      )
+      .then(function (row) {
+        return row;
+      });
   }
   async delAccount(id) {
     const result = await db("accounts").where("id", id).del();
@@ -139,27 +142,27 @@ class AccountDAO {
     return false;
   }
   async setRoles(data) {
-    const { priviledges, home, id: uid } = data; 
+    const { priviledges, home, id: uid } = data;
     try {
       const roles = JSON.stringify(priviledges);
-    const hasRoles = true;
-    const id = await db("accounts").where("id", uid).update({
-      roles,
-      home,
-      hasRoles,
-    }); 
-    // .returning("id");
-    if (id > 0) {
-      return {
-        status: 200,
-        message: "Role updated successfully",
-        id,
-      };
-    } else {
-      return { status: 422, error: "Error updating record" };
-    }
+      const hasRoles = true;
+      const id = await db("accounts").where("id", uid).update({
+        roles,
+        home,
+        hasRoles,
+      });
+      // .returning("id");
+      if (id > 0) {
+        return {
+          status: 200,
+          message: "Role updated successfully",
+          id,
+        };
+      } else {
+        return { status: 422, error: "Error updating record" };
+      }
     } catch (error) {
-      console.log({error});
+      console.log({ error });
     }
   }
   async auth(data) {
@@ -177,7 +180,7 @@ class AccountDAO {
       const token = await sign({ id: user.id }, `${process.env.SECRET_KEY}`);
       const id = await db("accounts").where("id", user.id).update({
         token,
-      }); 
+      });
       if (id > 0) {
         return {
           status: 201,
@@ -192,10 +195,9 @@ class AccountDAO {
         return { status: 404, message: "Error getting account information" };
       }
     } catch (error) {
-      console.log({error});
+      console.log({ error });
       return { status: 401, error: "email or password dont match" };
     }
   }
 }
 module.exports = new AccountDAO();
-

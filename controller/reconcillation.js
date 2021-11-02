@@ -1,4 +1,7 @@
 const Service = require("../service/reconcillation");
+const path = require("path");
+const fs = require("fs");
+const directoryPath = path.join(__dirname, "../uploads/documents");
 
 class ReconcillationController {
   async getAllRecord(req, res) {
@@ -80,6 +83,19 @@ class ReconcillationController {
     try {
       const result = await Service.delRecord(req.params.id);
       res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json("something went wrong");
+    }
+  }
+  async getAllFiles(req, res) {
+    try {
+      await fs.readdir(directoryPath, function (err, files) {
+        if (err) {
+          return console.log("Unable to scan directory: " + err);
+        } 
+        res.status(200).json(files);
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");

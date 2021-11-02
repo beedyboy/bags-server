@@ -30,6 +30,7 @@ app.use(express.json());
 // public folder
 app.use(express.static('./uploads'))
 app.use("/uploads/products", express.static("uploads/products"));
+app.use("/uploads/documents", express.static("uploads/documents"));
 app.use(router)
 
 
