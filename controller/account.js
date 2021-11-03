@@ -59,7 +59,7 @@ class AccountController {
   async updateAccount(req, res) {
     try {
       const result = await accountService.updateAccount(req.body);
-      res.status(201).json(result);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");
@@ -69,7 +69,7 @@ class AccountController {
     try {
       const { userId } = req;
       const result = await accountService.updateProfile(req.body, userId);
-      res.status(201).json(result);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json("something went wrong");

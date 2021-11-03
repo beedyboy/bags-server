@@ -60,6 +60,7 @@ class AccountDAO {
       firstname,
       lastname,
       username,
+      position,
       address,
       phone,
     } = data;
@@ -77,6 +78,7 @@ class AccountDAO {
         firstname,
         lastname,
         username,
+        position,
         address,
         phone,
       });
@@ -96,13 +98,14 @@ class AccountDAO {
   }
 
   async updateProfile(data, uid) {
-    const { firstname, lastname, username, address, phone } = data;
+    const { firstname, lastname, username, position, address, phone } = data;
 
     const id = await db("accounts").where("id", uid).update({
       firstname,
       lastname,
       username,
       address,
+      position,
       phone,
     });
     // .returning("id");
@@ -128,12 +131,15 @@ class AccountDAO {
         "roles",
         "address",
         "email",
+        "position",
         "status",
         "created_at",
         "updated_at"
       )
       .then(function (row) {
-        return row;
+        const result = row;
+        result.roles = JSON.parse(row.roles); 
+        return result;
       });
   }
   async delAccount(id) {
@@ -188,7 +194,8 @@ class AccountDAO {
           firstname: user.firstname,
           lastname: user.lastname,
           home: user.home,
-          acl: user.roles,
+          // acl: user.roles,
+          acl: JSON.parse(user.roles),
           token,
         };
       } else {

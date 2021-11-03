@@ -5,6 +5,7 @@ exports.up = function (knex) {
       table.string("firstname", 30).nullable();
       table.string("lastname", 30).nullable();
       table.string("username", 30).nullable();
+      table.string("position", 30).nullable();
       table.text("address").nullable();
       table.string("email", 50).notNullable().unique();
       table.text("password").notNullable();
