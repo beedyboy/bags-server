@@ -1,4 +1,6 @@
 const logger = require("../logger");
+const dotenv = require('dotenv');
+dotenv.config();
 
 // Update with your config settings.
 
@@ -6,11 +8,11 @@ module.exports = {
   test: {
     client: "mysql",
     connection: {
-      host: "127.0.0.1",
-      port: 3306,
-      user: "root",
-      password: "dontopen",
-      database: "bags",
+      host: process.env.APP_DEV_DB_HOST,
+      port: process.env.APP_DEV_DB_PORT,
+      user: process.env.APP_DEV_DB_USER,
+      password: process.env.APP_DEV_DB_PWD,
+      database: process.env.APP_DEV_DB_NAME,
       timezone: "UTC",
       dateStrings: true,
       debug: true,
@@ -37,10 +39,10 @@ module.exports = {
   },
   development: {
     client: "postgresql",
-    connection: {
-      database: "bags",
-      user: "postgres",
-      password: "1234",
+    connection: { 
+      user: process.env.APP_PROD_DB_USERNAME,
+      password: process.env.APP_PROD_DB_PASSWORD,
+      database: process.env.APP_PROD_DB_DATABASE,
     },
     pool: {
       min: 2,
@@ -54,12 +56,11 @@ module.exports = {
   production: {
     client: "mysql",
     connection: {
-      // host: "127.0.0.1",
-      host: "67.220.184.242",
-      port: 3306,
-      user: "mybagswa_root_app",
-      password: "VpW8Z8Z$8tdN",
-      database: "mybagswa_bags",
+      host: process.env.APP_PROD_DB_HOST, 
+      port: process.env.APP_PROD_DB_PORT,
+      user: process.env.APP_PROD_DB_USERNAME,
+      password: process.env.APP_PROD_DB_PASSWORD,
+      database: process.env.APP_PROD_DB_DATABASE,
       timezone: "UTC",
       dateStrings: true,
 

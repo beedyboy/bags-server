@@ -31,3 +31,10 @@
 {"contentLength":"-","level":"info","message":"HTTP Access Log","method":"GET","responseTime":43.851,"status":304,"timestamp":"Wed Nov 03 2021 20:09:39 GMT+0100 (West Africa Standard Time)","url":"/accounts"}
 {"contentLength":"-","level":"info","message":"HTTP Access Log","method":"GET","responseTime":1897.796,"status":304,"timestamp":"Wed Nov 03 2021 20:09:41 GMT+0100 (West Africa Standard Time)","url":"/reconcillations"}
 {"contentLength":"-","level":"info","message":"HTTP Access Log","method":"GET","responseTime":24.679,"status":304,"timestamp":"Wed Nov 03 2021 20:09:41 GMT+0100 (West Africa Standard Time)","url":"/products/"}
+{"level":"info","message":"server listening on port 8080"}
+{"contentLength":"650","level":"info","message":"HTTP Access Log","method":"POST","responseTime":1277.561,"status":201,"timestamp":"Wed Nov 03 2021 21:02:38 GMT+0100 (West Africa Standard Time)","url":"/accounts/auth"}
+{"contentLength":"-","level":"info","message":"HTTP Access Log","method":"GET","responseTime":87.066,"status":304,"timestamp":"Wed Nov 03 2021 21:02:40 GMT+0100 (West Africa Standard Time)","url":"/products/"}
+{"contentLength":"1413","level":"info","message":"HTTP Access Log","method":"GET","responseTime":117.793,"status":200,"timestamp":"Wed Nov 03 2021 21:02:40 GMT+0100 (West Africa Standard Time)","url":"/accounts"}
+{"contentLength":"-","level":"info","message":"HTTP Access Log","method":"GET","responseTime":2186.329,"status":304,"timestamp":"Wed Nov 03 2021 21:02:42 GMT+0100 (West Africa Standard Time)","url":"/reconcillations"}
+{"contentLength":"-","level":"info","message":"HTTP Access Log","method":"GET","responseTime":186.969,"status":304,"timestamp":"Wed Nov 03 2021 21:02:46 GMT+0100 (West Africa Standard Time)","url":"/brands"}
+{"contentLength":"671","level":"info","message":"HTTP Access Log","method":"GET","responseTime":88.233,"status":200,"timestamp":"Wed Nov 03 2021 21:02:49 GMT+0100 (West Africa Standard Time)","url":"/accounts/profile"}
